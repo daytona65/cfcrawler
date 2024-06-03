@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 start_url = os.getenv('START_URL')
-tree_url = os.getenv('TREE_URL')
 pat = os.getenv('PERSONAL_ACCESS_TOKEN')
 max_depth = 3
 headers = {
@@ -53,5 +52,9 @@ def traverse_links(start_url, depth):
 
     return visited
 
-links = traverse_links(tree_url, 1)
-print(links)
+links = traverse_links(start_url, 1)
+
+with open("docs.txt", "w") as file:
+    to_write = '\n'.join(links)
+    file.write(to_write)
+file.close()
