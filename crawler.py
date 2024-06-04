@@ -25,6 +25,8 @@ def is_valid(url):
 # Returns list of links in a page
 def extract_links(url):
     response = requests.get(url, headers=headers)
+    if response.headers.get('content-type') is not 'text/html':
+        return []
     soup = BeautifulSoup(response.text, 'html.parser')
     links = list(filter(is_valid, [urljoin(url, link['href']) for link in soup.find_all('a', href=True)]))
     return links
@@ -52,7 +54,7 @@ def traverse_links(start_url, depth):
 
     return visited
 
-links = traverse_links(start_url, 1)
+links = traverse_links(start_url, 2)
 
 with open("docs.txt", "w") as file:
     to_write = '\n'.join(links)
