@@ -2,12 +2,15 @@ import os
 import sys
 import requests
 import time
+from dotenv import load_dotenv
 
+load_dotenv()
 webhook_url = os.getenv('WEBHOOK_URL')
 system_id = os.getenv('SYSTEM_ID')
 headers = {
     "Content-Type": "application/json"
 }
+
 file_path = os.path.join(os.path.dirname(sys.argv[0]), 'docs.txt')
 file = open(file_path, 'r')
 Docs = file.readlines()
