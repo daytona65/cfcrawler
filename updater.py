@@ -1,4 +1,5 @@
 import os
+import sys
 import requests
 import time
 
@@ -7,7 +8,8 @@ system_id = os.getenv('SYSTEM_ID')
 headers = {
     "Content-Type": "application/json"
 }
-file = open('docs.txt', 'r')
+file_path = os.path.join(os.path.dirname(sys.argv[0]), 'docs.txt')
+file = open(file_path, 'r')
 Docs = file.readlines()
 
 for doc in Docs:
@@ -23,4 +25,4 @@ for doc in Docs:
         }
     }
     response = requests.post(url=webhook_url, headers=headers, json=body)
-    time.sleep(6)
+    time.sleep(5)
