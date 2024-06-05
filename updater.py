@@ -3,6 +3,7 @@ import sys
 import requests
 import time
 from dotenv import load_dotenv
+from tqdm import tqdm
 
 load_dotenv()
 webhook_url = os.getenv('WEBHOOK_URL')
@@ -15,6 +16,7 @@ file_path = os.path.join(os.path.dirname(sys.argv[0]), 'docs.txt')
 file = open(file_path, 'r')
 Docs = file.readlines()
 
+# Updating the docs
 for doc in Docs:
     command = ''
     if 'confluence.shopee.io' in doc:
@@ -29,3 +31,6 @@ for doc in Docs:
     }
     response = requests.post(url=webhook_url, headers=headers, json=body)
     time.sleep(5)
+
+# Prompt engineering
+# TODO: Google apps script to read prompts off sheets

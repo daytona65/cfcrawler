@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from dotenv import load_dotenv
+from tqdm import tqdm
 
 load_dotenv()
 start_url = os.getenv('START_URL')
@@ -15,8 +16,11 @@ headers = {
 
 # Function to check if the link is a valid Confluence / Google Doc page.
 def is_valid(url):
-    valid_domains=['confluence.shopee.io', 'docs.google.com']
-    invalid = ['plugins', 'display'] # May omit correct pages
+    valid_domains=['confluence.shopee.io', 'docs.google.com/document/']
+    response = requests.get(url, headers=headers)
+    if 'docs.google.com/document/' not in url and (not (response.headers.get('content-type') == 'text/html;charset=UTF-8' or response.headers.get('content-type') == 'text/html; charset=utf-8') or response.status_code != 200):
+        invalid_links.append(url + " | " + response.headers.get('content-type') + " | " + str(response.status_code))
+        return []
     for domain in valid_domains:
         if domain in url:
             return True
@@ -25,8 +29,6 @@ def is_valid(url):
 # Returns list of links in a page
 def extract_links(url):
     response = requests.get(url, headers=headers)
-    if response.headers.get('content-type') is not 'text/html':
-        return []
     soup = BeautifulSoup(response.text, 'html.parser')
     links = list(filter(is_valid, [urljoin(url, link['href']) for link in soup.find_all('a', href=True)]))
     return links
@@ -38,6 +40,10 @@ def traverse_links(start_url, depth):
     queue = [(start_url, 0)]
 
     while queue:
+        progress = ""
+        for i in range(len(queue)):
+            progress += "|"
+        print(f"Queue length: {len(queue)} " + progress)
         current_url, current_depth = queue.pop(0)
 
         if current_depth > depth:
@@ -54,9 +60,15 @@ def traverse_links(start_url, depth):
 
     return visited
 
+invalid_links = []
 links = traverse_links(start_url, 2)
 
 with open("docs.txt", "w") as file:
     to_write = '\n'.join(links)
+    file.write(to_write)
+file.close()
+
+with open("invaliddocs.txt", "w") as file:
+    to_write = '\n'.join(invalid_links)
     file.write(to_write)
 file.close()
