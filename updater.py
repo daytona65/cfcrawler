@@ -17,7 +17,7 @@ file = open(file_path, 'r')
 Docs = file.readlines()
 
 # Updating the docs
-for doc in Docs:
+for i, doc in enumerate(tqdm(Docs)):
     command = ''
     if 'confluence.shopee.io' in doc:
         command = '/add_cf_public'
