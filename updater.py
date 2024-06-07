@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 load_dotenv()
 webhook_url = os.getenv('WEBHOOK_URL')
-system_id = os.getenv('SYSTEM_ID')
+system_account_id = os.getenv('SYSTEM_ACCOUNT_ID')
 headers = {
     "Content-Type": "application/json"
 }
@@ -26,11 +26,11 @@ for i, doc in enumerate(tqdm(Docs)):
     body = {
             "tag": "text",
             "text": {
-                "content": f"<mention-tag target=\"seatalk://user?id={system_id}\"/> {command} {doc}"
+                "content": f"<mention-tag target=\"seatalk://user?id={system_account_id}\"/> {command} {doc}"
         }
     }
     response = requests.post(url=webhook_url, headers=headers, json=body)
-    time.sleep(5)
+    time.sleep(5.3)
 
 # Prompt engineering
 # TODO: Google apps script to read prompts off sheets

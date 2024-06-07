@@ -7,7 +7,7 @@ from tqdm import tqdm
 import time
 
 load_dotenv()
-start_url = os.getenv('START_URL')
+start_urls = os.getenv('START_URLS').split(',')
 pat = os.getenv('PERSONAL_ACCESS_TOKEN')
 max_depth = 3
 headers = {
@@ -17,9 +17,11 @@ headers = {
 
 def is_valid(url):
     valid_substrings=['confluence.shopee.io', 'docs.google.com/document/']
-    invalid_substrings = ['#', '@', 'draftId=', '/plugins/', '/diffpagesbyversion/', '/spaces/', 'dopeopledirectorysearch', '/diffpages', 'pageworkflow', 'login.action?', '/users/']
+    invalid_substrings = ['#', '@', '.action', 'draftId=', '/plugins/', '/diffpagesbyversion/', '/spaces/', 'dopeopledirectorysearch', '/diffpages', 'pageworkflow', '/users/', '/courses/', '/dashboard/']
     for invalid in invalid_substrings:
         if invalid in url:
+            if invalid == '.action' and ('viewpage.action' in url or '/pages.action' in url):
+                return True
             return False
     for domain in valid_substrings:
         if domain in url:
@@ -36,8 +38,8 @@ def extract_links(url):
         invalid_links.append(url + " | " + response.headers.get('content-type') + " | " + str(response.status_code))
         return links, invalid_links
     soup = BeautifulSoup(response.text, 'html.parser')
-    links = list(filter(is_valid, [urljoin(url, link['href']) for link in soup.find_all('a', href=True)]))
-    invalid_links += list(filter(lambda x : not is_valid(x), [urljoin(url, link['href']) for link in soup.find_all('a', href=True)]))
+    links = list(map(lambda x : x.strip(), filter(is_valid, [urljoin(url, link['href']) for link in soup.find_all('a', href=True)])))
+    invalid_links += list(map(lambda x : x.strip(), filter(lambda x : not is_valid(x), [urljoin(url, link['href']) for link in soup.find_all('a', href=True)])))
     return links, invalid_links
 
 
@@ -55,18 +57,24 @@ def traverse_links(start_url, depth):
 
         if current_url in visited:
             continue
-        print(current_url)
+
         links, invalid_links = extract_links(current_url)
         visited.add(current_url)
         invalid_visited.update(invalid_links)
 
         for i, link in enumerate(tqdm(links)):
             queue.append((link, current_depth + 1))
-            time.sleep(0.005)
+            # time.sleep(0.001)
 
     return visited, invalid_visited
 
-links, invalid_links = traverse_links(start_url, 2)
+links = set()
+invalid_links = set()
+for starting in start_urls:
+    l, il = traverse_links(starting, 2)
+    links.update(l)
+    invalid_links.update(il)
+
 
 
 print("Writing to docs.txt and invaliddocs.txt.........")
