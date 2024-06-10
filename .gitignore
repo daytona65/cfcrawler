@@ -1,6 +1,8 @@
 .env
 docs.txt
 invaliddocs.txt
+credentials.json
+token.json
 dist/
 inoutput/
 secrets/
