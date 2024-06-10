@@ -6,3 +6,5 @@ token.json
 dist/
 inoutput/
 secrets/
+secrets/credentials.json
+secrets/token.json
