@@ -9,7 +9,7 @@ from googleapiclient.errors import HttpError
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
 
-# The ID and range of a sample spreadsheet.
+# The ID and range of SRABot tracker
 SPREADSHEET_ID = "1-_Owe_M8_NqqC3A6dM8CXJeDdKS8FojZdacmseDsDTY"
 ENV_SHEETID = "708079097"
 PROMPT_SHEETID = "763891274"

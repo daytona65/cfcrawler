@@ -78,12 +78,12 @@ for starting in start_urls:
 
 
 print("Writing to docs.txt and invaliddocs.txt.........")
-with open("docs.txt", "w") as file:
+with open("inoutput/docs.txt", "w") as file:
     to_write = '\n'.join(links)
     file.write(to_write)
 file.close()
 
-with open("invaliddocs.txt", "w") as file:
+with open("inoutput/invaliddocs.txt", "w") as file:
     to_write = '\n'.join(invalid_links)
     file.write(to_write)
 file.close()
