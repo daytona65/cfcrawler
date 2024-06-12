@@ -4,10 +4,13 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from dotenv import load_dotenv
 from tqdm import tqdm
-import time
 
 load_dotenv()
-start_urls = os.getenv('START_URLS').split(',')
+# start_urls = os.getenv('START_URLS').split(',')
+start_urls = []
+with open("inoutput/starters.txt", "r") as file:
+    start_urls = file.readlines()
+file.close()
 pat = os.getenv('PERSONAL_ACCESS_TOKEN')
 max_depth = 3
 headers = {
@@ -16,8 +19,8 @@ headers = {
 }
 
 def is_valid(url):
-    valid_substrings=['confluence.shopee.io', 'docs.google.com/document/']
-    invalid_substrings = ['#', '@', '.action', 'draftId=', '/plugins/', '/diffpagesbyversion/', '/spaces/', 'dopeopledirectorysearch', '/diffpages', 'pageworkflow', '/users/', '/courses/', '/dashboard/']
+    valid_substrings=['https://confluence.shopee.io/pages/viewpage.action?pageId=', 'docs.google.com/document/']
+    invalid_substrings = ['#', '@', '.action', 'draftId=', '/plugins/', '/diffpagesbyversion/', '/spaces/', 'dopeopledirectorysearch', '/diffpages', 'pageworkflow', '/users/', '/exportword?', '/courses/', '/dashboard/']
     for invalid in invalid_substrings:
         if invalid in url:
             if invalid == '.action' and ('viewpage.action' in url or '/pages.action' in url):
@@ -59,31 +62,32 @@ def traverse_links(start_url, depth):
             continue
 
         links, invalid_links = extract_links(current_url)
-        visited.add(current_url)
+        if len(links) > 0:
+            visited.add(current_url)
         invalid_visited.update(invalid_links)
 
         for i, link in enumerate(tqdm(links)):
             queue.append((link, current_depth + 1))
-            # time.sleep(0.001)
 
     return visited, invalid_visited
 
 links = set()
 invalid_links = set()
 for starting in start_urls:
-    l, il = traverse_links(starting, 2)
+    starting = starting.strip()
+    l, il = traverse_links(starting, 1)
     links.update(l)
     invalid_links.update(il)
 
 
 
 print("Writing to docs.txt and invaliddocs.txt.........")
-with open("inoutput/docs.txt", "w") as file:
+with open("inoutput/docs1.txt", "w") as file:
     to_write = '\n'.join(links)
     file.write(to_write)
 file.close()
 
-with open("inoutput/invaliddocs.txt", "w") as file:
+with open("inoutput/invaliddocs1.txt", "w") as file:
     to_write = '\n'.join(invalid_links)
     file.write(to_write)
 file.close()

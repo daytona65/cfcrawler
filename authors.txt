@@ -1,1 +1,0 @@
-## TODO: Add whitelisted authors of articles so only those get added by the crawler

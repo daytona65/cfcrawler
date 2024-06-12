@@ -12,7 +12,7 @@ headers = {
     "Content-Type": "application/json"
 }
 
-file_path = os.path.join(os.path.dirname(sys.argv[0]), 'docs.txt')
+file_path = os.path.join(os.path.dirname(sys.argv[0]), 'inoutput/docs1.txt')
 file = open(file_path, 'r')
 Docs = file.readlines()
 
@@ -30,7 +30,7 @@ for i, doc in enumerate(tqdm(Docs)):
         }
     }
     response = requests.post(url=webhook_url, headers=headers, json=body)
-    time.sleep(5.3)
-
+    time.sleep(6)
+print("Updates done!")
 # Prompt engineering
 # TODO: Google apps script to read prompts off sheets

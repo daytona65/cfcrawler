@@ -1,4 +1,5 @@
 import os.path
+from dotenv import load_dotenv
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -10,11 +11,11 @@ from googleapiclient.errors import HttpError
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
 
 # The ID and range of SRABot tracker
-SPREADSHEET_ID = "1-_Owe_M8_NqqC3A6dM8CXJeDdKS8FojZdacmseDsDTY"
-ENV_SHEETID = "708079097"
-PROMPT_SHEETID = "763891274"
-DOCUMENT_SHEETID = "1931311055"
-RANGE_NAME = "Class Data!A2:E"
+SPREADSHEET_ID = os.getenv('SPREADSHEET_ID')
+ENV_SHEETID = os.getenv('ENV_SHEETID')
+PROMPT_SHEETID = os.getenv('PROMPT_SHEETID')
+DOCUMENT_SHEETID = os.getenv('DOCUMENT_SHEETID')
+RANGE_NAME = os.getenv('RANGE_NAME')
 
 
 def main():
