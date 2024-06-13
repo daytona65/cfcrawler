@@ -12,7 +12,7 @@ headers = {
     "Content-Type": "application/json"
 }
 
-file_path = os.path.join(os.path.dirname(sys.argv[0]), 'inoutput/docs1.txt')
+file_path = os.path.join(os.path.dirname(sys.argv[0]), 'inoutput/docs.txt')
 file = open(file_path, 'r')
 Docs = file.readlines()
 

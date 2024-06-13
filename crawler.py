@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 from tqdm import tqdm
 
 load_dotenv()
-# start_urls = os.getenv('START_URLS').split(',')
 start_urls = []
 with open("inoutput/starters.txt", "r") as file:
     start_urls = file.readlines()
@@ -17,6 +16,11 @@ headers = {
     "Authorization": f"Bearer {pat}",
     "Content-Type": "application/json"
 }
+
+def is_valid_SPO(url):
+    valid = 'https://confluence.shopee.io/display/SPO/'
+    if valid in url:
+        return True
 
 def is_valid(url):
     valid_substrings=['https://confluence.shopee.io/pages/viewpage.action?pageId=', 'docs.google.com/document/']
@@ -79,15 +83,13 @@ for starting in start_urls:
     links.update(l)
     invalid_links.update(il)
 
-
-
 print("Writing to docs.txt and invaliddocs.txt.........")
-with open("inoutput/docs1.txt", "w") as file:
+with open("inoutput/docs.txt", "w") as file:
     to_write = '\n'.join(links)
     file.write(to_write)
 file.close()
 
-with open("inoutput/invaliddocs1.txt", "w") as file:
+with open("inoutput/invaliddocs.txt", "w") as file:
     to_write = '\n'.join(invalid_links)
     file.write(to_write)
 file.close()
