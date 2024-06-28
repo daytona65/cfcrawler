@@ -1,3 +1,6 @@
 .env
 inoutput/
 secrets/
+
+# macOS
+.DS_Store/
